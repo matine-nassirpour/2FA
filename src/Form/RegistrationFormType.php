@@ -18,7 +18,7 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', null, [
-                'label' => 'Mail',
+                'label' => 'e-mail',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter an email',
@@ -30,7 +30,7 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'You should agree to our terms',
                     ]),
                 ],
             ])

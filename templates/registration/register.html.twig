@@ -6,28 +6,8 @@
     <div class="container mt-3">
         <h3>Créer un compte</h3>
         {{ form_start(registrationForm, {'attr':{'class':'needs-validation', 'novalidate':'novalidate'}}) }}
-            {#
-            <div class="form-group">
-                {{ form_row(registrationForm.email, {'attr':{'class':'form-control'}}) }}
-            </div>
-            <div class="form-group mt-2">
-                {{ form_row(registrationForm.plainPassword, {'attr':{'class':'form-control'}}) }}
-            </div>
-            <div class="form-check mt-2">
-                {{ form_row(registrationForm.agreeTerms, {'attr':{'class':'form-check-input'}}) }}
-            </div>
-            #}
-
-            {{ dump(registrationForm.email.vars) }}
-
-            {#
-            {% set class = '' %}
-            {% if not registrationForm.email.vars.valid %}
-                {% set class = 'is-invalid' %}
-            {% endif %}
-            #}
-            <div class="form-group">
-                <label for="{{ registrationForm.email.vars.id }}">Mail</label>
+            <fieldset class="form-group">
+                <label class="mb-1" for="{{ registrationForm.email.vars.id }}">Adresse e-mail</label>
                 <input
                         class="form-control {{ not registrationForm.email.vars.valid ? 'is-invalid' : '' }}"
                         type="text"
@@ -36,14 +16,48 @@
                         value="{{ registrationForm.email.vars.value }}"
                         required
                 >
-                {{ form_errors(registrationForm.email) }}
+                {% if not registrationForm.email.vars.valid %}
+                    {% for error in registrationForm.email.vars.errors %}
+                        <span class="help-block">{{ error.message }}</span>
+                    {% endfor %}
+                {% endif %}
                 {% do registrationForm.email.setRendered %}
-            </div>
+            </fieldset>
+            <fieldset class="form-group mt-2">
+                <label class="mb-1" for="{{ registrationForm.plainPassword.vars.id }}">Mot de passe</label>
+                <input
+                        class="form-control {{ not registrationForm.email.vars.valid ? 'is-invalid' : '' }}"
+                        type="password"
+                        id="{{ registrationForm.plainPassword.vars.id }}"
+                        name="{{ registrationForm.plainPassword.vars.full_name }}"
+                        value="{{ registrationForm.plainPassword.vars.value }}"
+                        required
+                >
+                {% if not registrationForm.plainPassword.vars.valid %}
+                    {% for error in registrationForm.plainPassword.vars.errors %}
+                        <span class="help-block">{{ error.message }}</span>
+                    {% endfor %}
+                {% endif %}
+                {% do registrationForm.plainPassword.setRendered %}
+            </fieldset>
+            <fieldset class="form-group mt-2">
+                <label for="{{ registrationForm.agreeTerms.vars.id }}">Accepter les conditions</label>
+                <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="{{ registrationForm.agreeTerms.vars.id }}"
+                        name="{{ registrationForm.agreeTerms.vars.full_name }}"
+                        value="{{ registrationForm.agreeTerms.vars.value }}"
+                        required
+                >
+                {% if not registrationForm.agreeTerms.vars.valid %}
+                    {% for error in registrationForm.agreeTerms.vars.errors %}
+                        <span class="help-block">{{ error.message }}</span>
+                    {% endfor %}
+                {% endif %}
+                {% do registrationForm.agreeTerms.setRendered %}
+            </fieldset>
             <button class="btn btn-outline-secondary mt-3" type="submit">Continuer</button>
-
-            <div class="alert alert-danger">
-                {{ form_rest(registrationForm) }}
-            </div>
         {{ form_end(registrationForm) }}
     </div>
 {% endblock %}
