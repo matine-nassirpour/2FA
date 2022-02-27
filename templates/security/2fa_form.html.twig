@@ -15,7 +15,6 @@
                         {{ authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') }}
                     </div>
                 {% endif %}
-                <p>Vérifier votre boîte de réception et saisisez le code reçu par mail</p>
                 <div class="visually-hidden">
                     {{ "choose_provider"|trans({}, 'SchebTwoFactorBundle') }}:
                     {% for provider in availableTwoFactorProviders %}
@@ -24,7 +23,7 @@
                 </div>
                 <form class="form" action="{{ checkPathUrl ? checkPathUrl: path(checkPathRoute) }}" method="post">
                     <fieldset class="mt-2">
-                        <label class="mb-1" for="_auth_code">{{ "auth_code"|trans({}, 'SchebTwoFactorBundle') }} {{ twoFactorProvider }}:</label>
+                        <label class="mb-1" for="_auth_code">{{ "Saisisez le code reçu par"|trans({}, 'SchebTwoFactorBundle') }} {{ twoFactorProvider }}</label>
                         <input
                                 id="_auth_code"
                                 class="form-control"
@@ -43,7 +42,7 @@
                     {% if displayTrustedOption %}
                         <fieldset class="mt-2">
                             <input class="form-check-input" id="_trusted" type="checkbox" name="{{ trustedParameterName }}" />
-                            <label class="form-check-label" for="_trusted">{{ "trusted"|trans({}, 'SchebTwoFactorBundle') }}</label>
+                            <label class="form-check-label" for="_trusted">{{ "Faire confiance à cet ordinateur"|trans({}, 'SchebTwoFactorBundle') }}</label>
                         </fieldset>
                     {% endif %}
                     {% if isCsrfProtectionEnabled %}
