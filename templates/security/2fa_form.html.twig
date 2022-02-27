@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Authentification à deux facteurs{% endblock %}
+
+{% block body %}
+    <div class="container m-auto">
+        <div class="m-auto">
+            <div class="mw-350px mx-auto mb-2">
+                <a class="text-decoration-none" href="{{ logoutPath }}">{{ "Annuler"|trans({}, 'SchebTwoFactorBundle') }}</a>
+            </div>
+            <div class="form-container m-auto">
+                <h3 class="mb-3">Authentification à deux facteurs</h3>
+                {% if authenticationError %}
+                    <div class="alert alert-danger">
+                        {{ authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') }}
+                    </div>
+                {% endif %}
+                <p>Vérifier votre boîte de réception et saisisez le code reçu par mail</p>
+                <div class="visually-hidden">
+                    {{ "choose_provider"|trans({}, 'SchebTwoFactorBundle') }}:
+                    {% for provider in availableTwoFactorProviders %}
+                        <a class="text-decoration-none" href="{{ path("2fa_login", {"preferProvider": provider}) }}">{{ provider }}</a>
+                    {% endfor %}
+                </div>
+                <form class="form" action="{{ checkPathUrl ? checkPathUrl: path(checkPathRoute) }}" method="post">
+                    <fieldset class="mt-2">
+                        <label class="mb-1" for="_auth_code">{{ "auth_code"|trans({}, 'SchebTwoFactorBundle') }} {{ twoFactorProvider }}:</label>
+                        <input
+                                id="_auth_code"
+                                class="form-control"
+                                type="text"
+                                name="{{ authCodeParameterName }}"
+                                autocomplete="one-time-code"
+                                autofocus
+                                {#
+                                https://www.twilio.com/blog/html-attributes-two-factor-authentication-autocomplete
+                                      If your 2fa methods are using numeric codes only, add these attributes for better user experience:
+                                      inputmode="numeric"
+                                      pattern="[0-9]*"
+                                #}
+                        />
+                    </fieldset>
+                    {% if displayTrustedOption %}
+                        <fieldset class="mt-2">
+                            <input class="form-check-input" id="_trusted" type="checkbox" name="{{ trustedParameterName }}" />
+                            <label class="form-check-label" for="_trusted">{{ "trusted"|trans({}, 'SchebTwoFactorBundle') }}</label>
+                        </fieldset>
+                    {% endif %}
+                    {% if isCsrfProtectionEnabled %}
+                        <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
+                    {% endif %}
+                    <button class="btn btn-outline-secondary mt-3 w-100" type="submit" value="{{ "login"|trans({}, 'SchebTwoFactorBundle') }}">Continuer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
