@@ -1,65 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <div class="container m-auto">
+    <main class="container m-auto">
+        <div class="mw-350px mx-auto">
+            {% for flashError in app.flashes('verify_email_error') %}
+                <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+            {% endfor %}
+        </div>
         <div class="form-container m-auto">
             <h3 class="mb-3">Créer un compte</h3>
-            {{ form_start(registrationForm, {'attr':{'novalidate':'novalidate'}}) }}
-            <fieldset>
-                <label class="mb-1" for="{{ registrationForm.email.vars.id }}">Adresse e-mail</label>
-                <input
-                        class="form-control {{ not registrationForm.email.vars.valid ? 'is-invalid' : '' }}"
-                        type="text"
-                        id="{{ registrationForm.email.vars.id }}"
-                        name="{{ registrationForm.email.vars.full_name }}"
-                        value="{{ registrationForm.email.vars.value }}"
-                        required
-                >
-                {% if not registrationForm.email.vars.valid %}
-                    {% for error in registrationForm.email.vars.errors %}
-                        <div class="error-message">{{ error.message }}</div>
-                    {% endfor %}
-                {% endif %}
-                {% do registrationForm.email.setRendered %}
-            </fieldset>
-            <fieldset class="mt-2">
-                <label class="mb-1" for="{{ registrationForm.plainPassword.vars.id }}">Mot de passe</label>
-                <input
-                        class="form-control {{ not registrationForm.email.vars.valid ? 'is-invalid' : '' }}"
-                        type="password"
-                        id="{{ registrationForm.plainPassword.vars.id }}"
-                        name="{{ registrationForm.plainPassword.vars.full_name }}"
-                        value="{{ registrationForm.plainPassword.vars.value }}"
-                        required
-                >
-                {% if not registrationForm.plainPassword.vars.valid %}
-                    {% for error in registrationForm.plainPassword.vars.errors %}
-                        <div class="error-message">{{ error.message }}</div>
-                    {% endfor %}
-                {% endif %}
-                {% do registrationForm.plainPassword.setRendered %}
-            </fieldset>
-            <fieldset class="mt-2">
-                <input
-                        class="form-check-input {{ not registrationForm.email.vars.valid ? 'is-invalid' : '' }}"
-                        type="checkbox"
-                        id="{{ registrationForm.agreeTerms.vars.id }}"
-                        name="{{ registrationForm.agreeTerms.vars.full_name }}"
-                        value="{{ registrationForm.agreeTerms.vars.value }}"
-                        required
-                >
-                <label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">Accepter nos conditions</label>
-                {% if not registrationForm.agreeTerms.vars.valid %}
-                    {% for error in registrationForm.agreeTerms.vars.errors %}
-                        <div class="error-message visually-hidden">{{ error.message }}</div>
-                    {% endfor %}
-                {% endif %}
-                {% do registrationForm.agreeTerms.setRendered %}
-            </fieldset>
-            <button class="btn btn-outline-secondary mt-3 w-100" type="submit">Continuer</button>
+            {{ form_start(registrationForm) }}
+                {{ form_row(registrationForm.email) }}
+                {{ form_row(registrationForm.password) }}
+                {{ form_row(registrationForm.agreeTerms) }}
+
+                <button class="btn btn-outline-secondary mt-3 w-100" type="submit">S'inscrire</button>
             {{ form_end(registrationForm) }}
         </div>
-    </div>
+    </main>
 {% endblock %}
