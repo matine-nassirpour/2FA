@@ -22,7 +22,7 @@
                     {% endfor %}
                 </div>
                 <form class="form" action="{{ checkPathUrl ? checkPathUrl: path(checkPathRoute) }}" method="post">
-                    <fieldset class="mt-2">
+                    <fieldset>
                         <label class="mb-1" for="_auth_code">{{ "Saisisez le code reçu par"|trans({}, 'SchebTwoFactorBundle') }} {{ twoFactorProvider }}</label>
                         <input
                                 id="_auth_code"
