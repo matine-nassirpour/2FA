@@ -15,7 +15,7 @@
                 </div>
             {% endif %}
         </div>
-        <div class="form-container m-auto">
+        <div class="form-container mw-350px m-auto">
             <h3 class="mb-3">S'identifier</h3>
             <form method="post">
                 <fieldset class="mb-2">
@@ -39,8 +39,14 @@
                 </div>
                 #}
 
-                <button class="btn btn-outline-secondary mt-3 w-100" type="submit">S'identifier</button>
+                <button class="btn btn-primary mt-3 w-100" type="submit">S'identifier</button>
             </form>
+        </div>
+        <div class="mt-4 divider-break mw-350px mx-auto">
+            <h5>Vous êtes nouveau ?</h5>
+        </div>
+        <div class="mw-350px mx-auto">
+            <a class="btn btn-outline-primary w-100" href="{{ path('app_register') }}">Créer votre compte</a>
         </div>
     </main>
 {% endblock %}
