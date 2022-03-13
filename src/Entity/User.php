@@ -67,11 +67,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $authCode;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isGuardCheckIp;
+
+    /**
+     * @var array|null
+     */
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $whitelistedIpAddresses = [];
+
     public function __construct()
     {
-        $this->registeredAt = new \DateTimeImmutable('now');
         $this->accountMustBeVerifiedBefore = (new \DateTimeImmutable('now'))->add(new \DateInterval('P1D'));
+        $this->isGuardCheckIp = false;
         $this->isVerified = false;
+        $this->registeredAt = new \DateTimeImmutable('now');
         $this->roles = ['ROLE_USER'];
     }
 
@@ -279,5 +289,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function setEmailAuthCode(string $authCode): void
     {
         $this->authCode = $authCode;
+    }
+
+    public function getIsGuardCheckIp(): bool
+    {
+        return $this->isGuardCheckIp;
+    }
+
+    public function setIsGuardCheckIp(bool $isGuardCheckIp): self
+    {
+        $this->isGuardCheckIp = $isGuardCheckIp;
+
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getWhitelistedIpAddresses(): ?array
+    {
+        return $this->whitelistedIpAddresses;
+    }
+
+    /**
+     * @param string|null $whitelistedIpAddresses
+     * @return $this
+     */
+    public function setWhitelistedIpAddresses(?string $whitelistedIpAddresses): self
+    {
+        if (!in_array($whitelistedIpAddresses, $this->getWhitelistedIpAddresses())) {
+            $this->whitelistedIpAddresses[] = $whitelistedIpAddresses;
+        }
+
+        return $this;
     }
 }
