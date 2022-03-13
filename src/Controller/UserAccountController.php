@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('user/account/profile/', name: 'app_user_account_profile_')]
+#[Route(path: 'user/account/profile/', name: 'app_user_account_profile_')]
 class UserAccountController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
@@ -20,8 +20,8 @@ class UserAccountController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('home', name: 'home', methods: ['GET'])]
-    public function account(): Response
+    #[Route(path: 'home', name: 'home', methods: ['GET'])]
+    public function home(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -35,7 +35,7 @@ class UserAccountController extends AbstractController
         ]);
     }
 
-    #[Route('add-IP', name: 'add_IP', methods: ['GET'])]
+    #[Route(path: 'add-IP', name: 'add_IP', methods: ['GET'])]
     public function addUserIpToWhiteList(Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -61,7 +61,7 @@ class UserAccountController extends AbstractController
         ]);
     }
 
-    #[Route('toggle-checking-ip', name: 'toggle_checking_ip', methods: ['POST'])]
+    #[Route(path: 'toggle-checking-ip', name: 'toggle_checking_ip', methods: ['POST'])]
     public function toggleGuardCheckingIp(Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

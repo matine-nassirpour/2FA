@@ -37,5 +37,53 @@
 
 
 {% block javascripts %}
-    <script defer src="{{ asset('js/auth-check-user-ip.js') }}"></script>
+{#    <script defer src="{{ asset('js/auth-check-user-ip.js') }}"></script>#}
+    <script>
+        const checkUserIpCheckbox = document.body.querySelector('input[id="check_user_ip_checkbox"]');
+        checkUserIpCheckbox.addEventListener('change', toggleCheckingIp);
+
+        document.body.querySelector('button[id="add_current_ip_to_whitelist_button"]').addEventListener('click', addCurrentIpToWhiteList);
+
+        /**
+         * Enable or disable the verification of the user's IP address during the authentication process via an AJAX call
+         */
+        function toggleCheckingIp() {
+            const checkUserIpLabel = document.body.querySelector('label[for="check_user_ip_checkbox"]');
+            const controllerUrl = this.getAttribute('data-url');
+            const fetchOptions = {
+                body: JSON.stringify(checkUserIpCheckbox.checked),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                method: 'POST'
+            };
+
+            fetch(controllerUrl, fetchOptions)
+                .then(response => response.json())
+                    .then(({isGuardCheckingIp}) => checkUserIpLabel.textContent = isGuardCheckingIp ? 'Active' : 'Inactive')
+                        .catch(error => console.error(error));
+        }
+
+        /**
+         * Add current IP address to whitelist via AJAX call
+         */
+        function addCurrentIpToWhiteList() {
+            const userIpAddresses = document.body.querySelector('p[id="user_ip_addresses"]');
+            const controllerUrl = this.getAttribute('data-url');
+            const fetchOptions = {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                method: 'GET'
+            };
+
+            fetch(controllerUrl, fetchOptions)
+                .then(response => response.json())
+                    .then(({user_IP}) => userIpAddresses.textContent += ` | ${user_IP}`)
+                        .catch(error => console.error(error));
+        }
+    </script>
 {% endblock %}
