@@ -37,7 +37,7 @@ class UserChecker implements UserCheckerInterface
         }
 
         if ($user->getIsGuardCheckIp() && !$this->isUserIpIsInWhiteList($user)) {
-            throw new CustomUserMessageAccountStatusException('Vous n\'êtes pas autorisé à vous identifier avec cette adresse IP car elle ne figure pas dans la liste blanche des adresses IP autorisées !');
+            throw new CustomUserMessageAccountStatusException('Vous n\'êtes pas autorisé à vous identifier avec cette adresse IP, car elle ne se figure pas sur la liste blanche des adresses IP autorisées !');
         }
     }
 
