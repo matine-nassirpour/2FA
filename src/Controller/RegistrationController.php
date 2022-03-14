@@ -25,6 +25,11 @@ class RegistrationController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher,
     ): Response
     {
+         // Redirect to home page if user is already logged in
+         if ($this->getUser()) {
+             return $this->redirectToRoute('app_home');
+         }
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
