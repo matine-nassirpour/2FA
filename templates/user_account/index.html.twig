@@ -16,13 +16,13 @@
                 <tbody>
                     <td>{{ user.email }}</td>
                     <td>
-                        Un hash argon2id, pas intéressant... &#xF440;
+                        Un hash argon2id, pas intéressant... &#x1F440;
                         <a class="btn btn-sm btn-warning m-3" href="#">Modifier mon mot de passe</a>
                     </td>
                     <td>
                         <fieldset class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="check_user_ip_checkbox" data-url="{{ path('app_user_account_profile_toggle_checking_ip') }}">
-                            <label class="form-check-label" for="check_user_ip_checkbox">Inactive</label>
+                            <input class="form-check-input" type="checkbox" id="check_user_ip_checkbox" data-url="{{ path('app_user_account_profile_toggle_checking_ip') }}" {{ user.isGuardCheckIp ? 'checked' : null }}>
+                            <label class="form-check-label" for="check_user_ip_checkbox">{{ user.isGuardCheckIp ? 'Active' : 'Inactive' }}</label>
                         </fieldset>
                     </td>
                     <td>
@@ -37,7 +37,6 @@
 
 
 {% block javascripts %}
-{#    <script defer src="{{ asset('js/auth-check-user-ip.js') }}"></script>#}
     <script>
         const checkUserIpCheckbox = document.body.querySelector('input[id="check_user_ip_checkbox"]');
         checkUserIpCheckbox.addEventListener('change', toggleCheckingIp);
@@ -82,8 +81,15 @@
 
             fetch(controllerUrl, fetchOptions)
                 .then(response => response.json())
-                    .then(({user_IP}) => userIpAddresses.textContent += ` | ${user_IP}`)
-                        .catch(error => console.error(error));
+                    .then(({user_IP}) => {
+                        if (user_ip_addresses.textContent === '') {
+                            userIpAddresses.textContent = user_IP;
+                        } else {
+                            if (!user_ip_addresses.textContent.includes(user_IP)) {
+                                userIpAddresses.textContent += ` | ${user_IP}`;
+                            }
+                        }
+                    }).catch(error => console.error(error));
         }
     </script>
 {% endblock %}

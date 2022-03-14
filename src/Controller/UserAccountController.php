@@ -56,7 +56,7 @@ class UserAccountController extends AbstractController
         $this->entityManager->flush();
 
         return $this->json([
-            'message' => 'Adresse IP a été ajoutée à la liste blanche',
+            'message' => 'Adresse IP a bien été ajoutée à la liste blanche',
             'user_IP' => $userIP
         ]);
     }
