@@ -16,7 +16,7 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/inscription', name: 'app_register')]
+    #[Route(path: '/register', name: 'app_register', methods: ['GET', 'POST'])]
     public function register(
         EntityManagerInterface $entityManager,
         Request $request,
@@ -58,7 +58,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/{id<\d+>}/{token}', name: 'app_verify_account', methods: 'GET')]
+    #[Route(path: '/{id<\d+>}/{token}', name: 'app_verify_account', methods: ['GET'])]
     public function verifyUserAccount(
         EntityManagerInterface $entityManager,
         User $user,

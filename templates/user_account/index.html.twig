@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace utilisateur{% endblock %}
+
+{% block body %}
+    <main class="container text-center mt-3">
+        <section class="table-responsive">
+            <h1 class="mt-5 mb-3">Mon compte utilisateur</h1>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <th>Email</th>
+                    <th>Mot de passe</th>
+                    <th>Activer la vérification d'adresse IP à l'authentification</th>
+                    <th>Mes adresses IP</th>
+                </thead>
+                <tbody>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        Un hash argon2id, pas intéressant... &#x1F440;
+                        <a class="btn btn-sm btn-warning m-3" href="#">Modifier mon mot de passe</a>
+                    </td>
+                    <td>
+                        <fieldset class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="check_user_ip_checkbox" data-url="{{ path('app_user_account_profile_toggle_checking_ip') }}" {{ user.isGuardCheckIp ? 'checked' : null }}>
+                            <label class="form-check-label" for="check_user_ip_checkbox">{{ user.isGuardCheckIp ? 'Active' : 'Inactive' }}</label>
+                        </fieldset>
+                    </td>
+                    <td>
+                        <p id="user_ip_addresses">{{ user.whitelistedIpAddresses|join(' | ') }}</p>
+                        <button class="btn btn-sm btn-warning m-3" type="button" id="add_current_ip_to_whitelist_button" data-url="{{ path('app_user_account_profile_add_IP') }}">Ajouter mon adresse IP actuelle</button>
+                    </td>
+                </tbody>
+            </table>
+        </section>
+    </main>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+        const checkUserIpCheckbox = document.body.querySelector('input[id="check_user_ip_checkbox"]');
+        checkUserIpCheckbox.addEventListener('change', toggleCheckingIp);
+
+        document.body.querySelector('button[id="add_current_ip_to_whitelist_button"]').addEventListener('click', addCurrentIpToWhiteList);
+
+        /**
+         * Enable or disable the verification of the user's IP address during the authentication process via an AJAX call
+         */
+        function toggleCheckingIp() {
+            const checkUserIpLabel = document.body.querySelector('label[for="check_user_ip_checkbox"]');
+            const controllerUrl = this.getAttribute('data-url');
+            const fetchOptions = {
+                body: JSON.stringify(checkUserIpCheckbox.checked),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                method: 'POST'
+            };
+
+            fetch(controllerUrl, fetchOptions)
+                .then(response => response.json())
+                    .then(({isGuardCheckingIp}) => checkUserIpLabel.textContent = isGuardCheckingIp ? 'Active' : 'Inactive')
+                        .catch(error => console.error(error));
+        }
+
+        /**
+         * Add current IP address to whitelist via AJAX call
+         */
+        function addCurrentIpToWhiteList() {
+            const userIpAddresses = document.body.querySelector('p[id="user_ip_addresses"]');
+            const controllerUrl = this.getAttribute('data-url');
+            const fetchOptions = {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                method: 'GET'
+            };
+
+            fetch(controllerUrl, fetchOptions)
+                .then(response => response.json())
+                    .then(({user_IP}) => {
+                        if (user_ip_addresses.textContent === '') {
+                            userIpAddresses.textContent = user_IP;
+                        } else {
+                            if (!user_ip_addresses.textContent.includes(user_IP)) {
+                                userIpAddresses.textContent += ` | ${user_IP}`;
+                            }
+                        }
+                    }).catch(error => console.error(error));
+        }
+    </script>
+{% endblock %}
