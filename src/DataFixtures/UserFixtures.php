@@ -3,42 +3,45 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use DateInterval;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
-use Faker\Generator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
 {
-    private Generator $faker;
-    private ObjectManager $manager;
-    private UserPasswordHasherInterface $passwordHash;
+    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct(UserPasswordHasherInterface $passwordHash) {
-        $this->passwordHash = $passwordHash;
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function load(ObjectManager $manager): void
     {
-        $this->manager = $manager;
-        $this->faker = Factory::create();
-        $this->generateUsers(3);
-        $this->manager->flush();
-    }
+        $firstUser = new User();
+        $firstUser->setEmail('matine.nassirpour@chatelet.fr')
+            ->setPassword($this->passwordHasher->hashPassword($firstUser, 'chatelet'))
+            ->setIsVerified(true)
+            ->setAccountVerifiedAt((new DateTimeImmutable('now'))->add(new DateInterval('PT7M')))
+        ;
 
-    private function generateUsers(int $number): void
-    {
-        $isVerified = [true, false, false];
+        $secondUser = new User();
+        $secondUser->setEmail('olivier.bastin@chatelet.fr')
+            ->setPassword($this->passwordHasher->hashPassword($secondUser, 'chatelet'))
+        ;
 
-        for ($i = 0; $i < $number; $i++) {
-            $user = new User();
+        $thirdUser = new User();
+        $thirdUser->setEmail('louis.morvan@chatelet.fr')
+            ->setPassword($this->passwordHasher->hashPassword($thirdUser, 'chatelet'))
+        ;
 
-            $user->setEmail($this->faker->email)
-                ->setPassword($this->passwordHash->hashPassword($user, 'chatelet'))
-                ->setIsVerified($isVerified[$i]);
+        $manager->persist($firstUser);
+        $manager->persist($secondUser);
+        $manager->persist($thirdUser);
 
-            $this->manager->persist($user);
-        }
+        $manager->flush();
     }
 }
